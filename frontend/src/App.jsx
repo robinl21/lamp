@@ -139,7 +139,8 @@ function LampModel({ angles }) {
 }
 
 function App() {
-  const [status, setStatus] = useState('Ready for connection...')
+  const [status, setStatus] = useState('ready for connection...')
+  const [showControls, setShowControls] = useState(true)
   const [angles, setAngles] = useState({ base: 90, j1: 90, j2: 90 })
   const stepSize = 10
   
@@ -227,7 +228,7 @@ function App() {
         body: JSON.stringify({ command: cmd })
       })
       if (response.ok) {
-        setStatus(`Active: ${cmd}`)
+        setStatus(`active: ${cmd.toLowerCase()}`)
       }
     } catch (err) {
       console.error("Hardware sync failed")
@@ -244,9 +245,9 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-sketch-bg">
+    <div className="h-screen flex flex-row bg-sketch-bg relative overflow-hidden w-full">
       {/* 3D Visualizer Section */}
-      <div className="flex-1 h-[400px] md:h-screen border-r border-sketch-line/20 relative">
+      <div className="grow relative h-full min-w-0">
         <Canvas shadows>
           <color attach="background" args={['#050505']} />
           <Suspense fallback={null}>
@@ -263,75 +264,84 @@ function App() {
       </div>
 
       {/* Controls Section */}
-      <div className="max-w-md w-full p-12 flex flex-col justify-center space-y-12 bg-sketch-bg">
-        <header className="text-center space-y-2">
-          <h1 className="text-2xl font-light tracking-[0.2em] uppercase">Robotic Arm</h1>
-          <p className="text-[10px] opacity-40 uppercase tracking-[0.3em]">Local Control Interface</p>
-        </header>
+      {showControls && (
+        <div className="w-[448px] flex-shrink-0 h-full p-12 flex flex-col justify-center space-y-12 bg-sketch-bg border-l border-sketch-line/20 overflow-y-auto">
+          <header className="text-center">
+            <h1 className="text-2xl font-light tracking-[0.2em] lowercase">lamp</h1>
+          </header>
 
-        <div className="space-y-6">
-          {/* Rotation */}
-          <div className="control-group">
-            <label className="text-[10px] uppercase tracking-widest opacity-40">Base Rotation</label>
-            <div className="grid grid-cols-2 gap-4">
-              <button
-                onMouseDown={() => startMoving('ROTATE_CCW', 'base', -1)}
-                onMouseUp={stopMoving}
-                onMouseLeave={stopMoving}
-                onClick={() => handleSingleClick('ROTATE_CCW', 'base', -1)}
-                className="btn-control">LEFT</button>
-              <button
-                onMouseDown={() => startMoving('ROTATE_CW', 'base', 1)}
-                onMouseUp={stopMoving}
-                onMouseLeave={stopMoving}
-                onClick={() => handleSingleClick('ROTATE_CW', 'base', 1)}
-                className="btn-control">RIGHT</button>
+          <div className="space-y-6">
+            {/* Rotation */}
+            <div className="control-group">
+              <label className="text-[10px] lowercase tracking-widest opacity-40">base rotation</label>
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  onMouseDown={() => startMoving('ROTATE_CCW', 'base', -1)}
+                  onMouseUp={stopMoving}
+                  onMouseLeave={stopMoving}
+                  onClick={() => handleSingleClick('ROTATE_CCW', 'base', -1)}
+                  className="btn-control lowercase">left</button>
+                <button
+                  onMouseDown={() => startMoving('ROTATE_CW', 'base', 1)}
+                  onMouseUp={stopMoving}
+                  onMouseLeave={stopMoving}
+                  onClick={() => handleSingleClick('ROTATE_CW', 'base', 1)}
+                  className="btn-control lowercase">right</button>
+              </div>
+            </div>
+
+            {/* Joint 1 */}
+            <div className="control-group">
+              <label className="text-[10px] lowercase tracking-widest opacity-40">joint one</label>
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  onMouseDown={() => startMoving('J1_UP', 'j1', 1)}
+                  onMouseUp={stopMoving}
+                  onMouseLeave={stopMoving}
+                  onClick={() => handleSingleClick('J1_UP', 'j1', 1)}
+                  className="btn-control lowercase">up</button>
+                <button
+                  onMouseDown={() => startMoving('J1_DOWN', 'j1', -1)}
+                  onMouseUp={stopMoving}
+                  onMouseLeave={stopMoving}
+                  onClick={() => handleSingleClick('J1_DOWN', 'j1', -1)}
+                  className="btn-control lowercase">down</button>
+              </div>
+            </div>
+
+            {/* Joint 2 */}
+            <div className="control-group">
+              <label className="text-[10px] lowercase tracking-widest opacity-40">joint two</label>
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  onMouseDown={() => startMoving('J2_UP', 'j2', 1)}
+                  onMouseUp={stopMoving}
+                  onMouseLeave={stopMoving}
+                  onClick={() => handleSingleClick('J2_UP', 'j2', 1)}
+                  className="btn-control lowercase">up</button>
+                <button
+                  onMouseDown={() => startMoving('J2_DOWN', 'j2', -1)}
+                  onMouseUp={stopMoving}
+                  onMouseLeave={stopMoving}
+                  onClick={() => handleSingleClick('J2_DOWN', 'j2', -1)}
+                  className="btn-control lowercase">down</button>
+              </div>
             </div>
           </div>
 
-          {/* Joint 1 */}
-          <div className="control-group">
-            <label className="text-[10px] uppercase tracking-widest opacity-40">Joint One</label>
-            <div className="grid grid-cols-2 gap-4">
-              <button
-                onMouseDown={() => startMoving('J1_UP', 'j1', 1)}
-                onMouseUp={stopMoving}
-                onMouseLeave={stopMoving}
-                onClick={() => handleSingleClick('J1_UP', 'j1', 1)}
-                className="btn-control">UP</button>
-              <button
-                onMouseDown={() => startMoving('J1_DOWN', 'j1', -1)}
-                onMouseUp={stopMoving}
-                onMouseLeave={stopMoving}
-                onClick={() => handleSingleClick('J1_DOWN', 'j1', -1)}
-                className="btn-control">DOWN</button>
-            </div>
-          </div>
-
-          {/* Joint 2 */}
-          <div className="control-group">
-            <label className="text-[10px] uppercase tracking-widest opacity-40">Joint Two</label>
-            <div className="grid grid-cols-2 gap-4">
-              <button
-                onMouseDown={() => startMoving('J2_UP', 'j2', 1)}
-                onMouseUp={stopMoving}
-                onMouseLeave={stopMoving}
-                onClick={() => handleSingleClick('J2_UP', 'j2', 1)}
-                className="btn-control">UP</button>
-              <button
-                onMouseDown={() => startMoving('J2_DOWN', 'j2', -1)}
-                onMouseUp={stopMoving}
-                onMouseLeave={stopMoving}
-                onClick={() => handleSingleClick('J2_DOWN', 'j2', -1)}
-                className="btn-control">DOWN</button>
-            </div>
-          </div>
+          <footer className="text-center text-[10px] opacity-40 font-mono lowercase tracking-widest">
+            {status}
+          </footer>
         </div>
+      )}
 
-        <footer className="text-center text-[10px] opacity-40 font-mono uppercase tracking-widest">
-          {status}
-        </footer>
-      </div>
+      {/* Persistent Toggle UI */}
+      <button 
+        onClick={() => setShowControls(!showControls)}
+        className="fixed bottom-8 left-8 text-[10px] tracking-[0.2em] opacity-40 hover:opacity-100 transition-opacity font-mono lowercase z-50"
+      >
+        {showControls ? '— hide controls' : '+ show controls'}
+      </button>
     </div>
   )
 }
