@@ -1,0 +1,15 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+body {
+  @apply bg-bs-cream text-bs-green antialiased;
+  font-family: 'Inter', sans-serif;
+}
+
+.btn-control {
+  @apply bg-bs-green text-bs-cream py-4 rounded-xl font-medium text-sm transition-all active:scale-95 active:bg-[#1e3126];
+}
+
+.control-group {
+  @apply p-8 rounded-2xl shadow-sm border border-[#E5E4E0] bg-white space-y-4;
+}
