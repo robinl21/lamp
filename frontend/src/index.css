@@ -2,14 +2,14 @@
 @config "../tailwind.config.js";
 
 body {
-  @apply bg-bs-cream text-bs-green antialiased;
-  font-family: 'Inter', sans-serif;
+  @apply bg-sketch-bg text-sketch-line antialiased;
+  font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace;
 }
 
 .btn-control {
-  @apply bg-bs-green text-bs-cream py-4 rounded-xl font-medium text-sm transition-all active:scale-95 active:bg-[#1e3126];
+  @apply border border-sketch-line text-sketch-line bg-transparent py-4 rounded-none font-medium text-xs tracking-widest transition-all hover:bg-white hover:text-black active:scale-95;
 }
 
 .control-group {
-  @apply p-8 rounded-2xl shadow-sm border border-[#E5E4E0] bg-white space-y-4;
+  @apply p-6 border border-sketch-line bg-transparent space-y-4;
 }
